@@ -1,0 +1,16 @@
+{
+    "name": "zoomyboy/tests",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Philipp Lang",
+            "email": "pille@zoomyboy.de"
+        }
+    ],
+	"autoload": {
+		"psr-4": {
+			"Zoomyboy\\Tests\\": "src/"
+		}
+	},
+    "require": {}
+}
