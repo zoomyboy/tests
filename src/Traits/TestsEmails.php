@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use Zoomyboy\Tests\Lib\Email;
 
 trait TestsEmails {
-	public function clearEmails() {
+	public function clearMailtrap() {
 		$client = new Client([
 			'base_uri' => 'https://mailtrap.io/api/v1/'
 		]);
@@ -18,7 +18,7 @@ trait TestsEmails {
 		]);
 	}
 
-	public function getEmail() {
+	public function assertMailtrap() {
 		$client = new Client([
 			'base_uri' => 'https://mailtrap.io/api/v1/'
 		]);
@@ -29,8 +29,12 @@ trait TestsEmails {
 		]);
 		return (new EmailCollection(json_decode((string)$request->getBody())))
 			->map(function($email) {
-				return new Email($email);
+				return (new Email($email))->setAttachments();
 			});
+	}
+
+	public function assertMailtrapCount($count) {
+		$this->assertEquals($count, $this->assertMailtrap()->count());
 	}
 
 	public function assertEmailSubject($subject, $email) {
