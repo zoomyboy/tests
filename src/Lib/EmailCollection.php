@@ -3,6 +3,7 @@
 namespace Zoomyboy\Tests\Lib;
 
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Assert;
 
 class EmailCollection extends Collection {
 	public function to($email) {
@@ -24,6 +25,6 @@ class EmailCollection extends Collection {
 	}
 
 	public function wasSent($count = 1) {
-		return $this->count() == $count;
+		Assert::assertCount($count, $this);
 	}
 }
