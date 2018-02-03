@@ -17,6 +17,11 @@ class Email {
 		return $this->content->{$attr};
 	}
 
+    public function getGreeting() {
+        preg_match_all('/<h1 style="[^"]+">(.*)<\/h1>/', $this->content->html_body, $matches);
+        return $matches[1][0];
+    }
+
 	public function getAction() {
 		preg_match_all('/<a href="([^"]+)".*class="button.*>([^<]+)<\/a>/', $this->html_body, $matches, PREG_SET_ORDER);
 		return (object) [
