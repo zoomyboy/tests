@@ -3,6 +3,7 @@
 namespace Zoomyboy\Tests\Lib;
 
 use GuzzleHttp\Client;
+use PHPUnit\Framework\Assert;
 
 class Email {
 
@@ -22,6 +23,12 @@ class Email {
         return $matches[1][0];
     }
 
+    public function assertGreeting($greeting) {
+        preg_match_all('/<h1 style="[^"]+">(.*)<\/h1>/', $this->content->html_body, $matches);
+       ;
+		Assert::assertEquals($greeting, $matches[1][0], 'Failed asserting that the actual Greting '.$matches[1][0].' matches the expected Greeting '.$greeting.'.');
+    }
+
 	public function getAction() {
 		preg_match_all('/<a href="([^"]+)".*class="button.*>([^<]+)<\/a>/', $this->html_body, $matches, PREG_SET_ORDER);
 		return (object) [
@@ -35,9 +42,9 @@ class Email {
 			'base_uri' => 'https://mailtrap.io/api/v1/'
 		]);
 
-		$request = $client->request('GET', 'inboxes/165153/messages/'.$this->id.'/attachments', [
+		$request = $client->request('GET', 'inboxes/'.env('MAILTRAP_INBOX').'/messages/'.$this->id.'/attachments', [
 			'headers' => [
-				'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6ImQ3NDJjMDc5Y2M5MzBjZGNiMDU5YjZhZDQxMGI1NjA4In0.8r6hgvUGekf_uginRGFQAJVYGQ7gr1TRqRJINDYXrzE_BFPGJ9zZPAxEl6mWZxGugfpAALyIheCZ8R7fmpKbLg'
+				'Authorization' => 'Bearer '.env('MAILTRAP_JWT')
 			]
 		]);
 

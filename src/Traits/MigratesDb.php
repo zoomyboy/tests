@@ -2,7 +2,7 @@
 
 namespace Zoomyboy\Tests\Traits;
 
-class MigratesDb
+trait MigratesDb
 {
     public function runSeeder($seeder)
     {

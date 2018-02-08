@@ -26,5 +26,7 @@ class EmailCollection extends Collection {
 
 	public function wasSent($count = 1) {
 		Assert::assertCount($count, $this);
+
+        return $this;
 	}
 }

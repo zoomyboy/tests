@@ -8,23 +8,26 @@ use Zoomyboy\Tests\Lib\Email;
 
 trait TestsEmails {
 	public function clearMailtrap() {
+        if (!env('MAILTRAP_INBOX')) {abort(404, 'You should set the Mailtrap Inbox ID MAILTRAP_INBOX in env first');}
 		$client = new Client([
 			'base_uri' => 'https://mailtrap.io/api/v1/'
 		]);
-		$request = $client->request('PATCH', 'inboxes/165153/clean', [
+		$request = $client->request('PATCH', 'inboxes/'.env('MAILTRAP_INBOX').'/clean', [
 			'headers' => [
-				'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6ImQ3NDJjMDc5Y2M5MzBjZGNiMDU5YjZhZDQxMGI1NjA4In0.8r6hgvUGekf_uginRGFQAJVYGQ7gr1TRqRJINDYXrzE_BFPGJ9zZPAxEl6mWZxGugfpAALyIheCZ8R7fmpKbLg'
+				'Authorization' => 'Bearer '.env('MAILTRAP_JWT')
 			]
 		]);
 	}
 
 	public function assertMailtrap() {
+        if (!env('MAILTRAP_INBOX')) {abort(404, 'You should set the Mailtrap Inbox ID MAILTRAP_INBOX in env first');}
 		$client = new Client([
 			'base_uri' => 'https://mailtrap.io/api/v1/'
 		]);
-		$request = $client->request('GET', 'inboxes/165153/messages', [
+
+		$request = $client->request('GET', 'inboxes/'.env('MAILTRAP_INBOX').'/messages', [
 			'headers' => [
-				'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6ImQ3NDJjMDc5Y2M5MzBjZGNiMDU5YjZhZDQxMGI1NjA4In0.8r6hgvUGekf_uginRGFQAJVYGQ7gr1TRqRJINDYXrzE_BFPGJ9zZPAxEl6mWZxGugfpAALyIheCZ8R7fmpKbLg'
+				'Authorization' => 'Bearer '.env('MAILTRAP_JWT')
 			]
 		]);
 		return (new EmailCollection(json_decode((string)$request->getBody())))
