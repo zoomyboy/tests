@@ -37,6 +37,16 @@ class Email {
 		];
 	}
 
+	public function getActions() {
+		preg_match_all('/<a href="([^"]+)".*class="button.*>([^<]+)<\/a>/', $this->html_body, $matches, PREG_SET_ORDER);
+        return collect(array_map(function($map) {
+            return (object) [
+                'href' => $map[1],
+                'text' => $map[2]
+            ];
+        }, $matches));
+	}
+
 	public function setAttachments() {
 		$client = new Client([
 			'base_uri' => 'https://mailtrap.io/api/v1/'
@@ -54,4 +64,12 @@ class Email {
 
 		return $this;
 	}
+
+    public function actionByTitle($title) {
+        $action = $this->getActions()->first(function($a) use ($title) {
+            return $a->text == $title;
+        });
+
+        return $action;
+    }
 }
