@@ -2,8 +2,12 @@
 
 namespace Zoomyboy\Tests\Traits;
 
+use Illuminate\Support\Str;
+
 trait MigratesDb
 {
+    public $tableNames = [];
+
     public function runSeeder($seeder)
     {
         (new $seeder)->run();
@@ -11,17 +15,23 @@ trait MigratesDb
 
     public function runMigration($name)
     {
+        $this->tableNames[] = $name;
         $this->beforeApplicationDestroyed(function () use ($name) {
-            $this->rollbackMigration($name);
+
+            $this->rollbackMigrations();
         });
         $migration = $this->getMigrationInstance($name);
         $migration->up();
     }
 
-    public function rollbackMigration($name)
+    public function rollbackMigrations()
     {
-        $migration = $this->getMigrationInstance($name);
-        $migration->down();
+        foreach(array_reverse($this->tableNames) as $migration) {
+            $migration = $this->getMigrationInstance($migration);
+            $migration->down();
+        }
+
+        $this->tableNames = [];
     }
 
     public function getMigrationInstance($name)
