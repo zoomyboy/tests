@@ -35,4 +35,20 @@ trait HandlesExceptions {
 
         return $this;
     }
+
+    public function assertException($exc, $closure) {
+        $thrown = null;
+
+        try {
+            call_user_func($closure);
+        } catch(\Exception $e) {
+            if (! is_a($e, $exc)) {
+                throw $e;
+            }
+            $this->assertInstanceOf($exc, $e, 'Failed asserting that Exception '.$exc.' was thrown.');
+            $thrown = $e;
+        }
+
+        $this->assertInstanceOf($exc, $thrown, 'Failed asserting that Exception '.$exc.' was thrown.');
+    }
 }
