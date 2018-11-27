@@ -27,5 +27,7 @@ trait AuthenticatesUsers
             && $shouldCreateUser) {
             $this->afterAuthUserCreated($user);
         }
+
+        return $user;
     }
 }
