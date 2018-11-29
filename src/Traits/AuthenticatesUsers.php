@@ -20,6 +20,12 @@ trait AuthenticatesUsers
     public function authAsApi($user = null, $guard = null)
     {
         $shouldCreateUser = is_null($user);
+
+        if (method_exists($this, 'beforeAuthUserCreated')
+            && $shouldCreateUser) {
+            $this->beforeAuthUserCreated($user);
+        }
+
         $user = $user ?: $this->create('User');
         Passport::actingAs($user, [], $guard ?: 'api');
 
